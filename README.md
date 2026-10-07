@@ -94,14 +94,22 @@ Adds a git `post-commit` hook that re-indexes changed files.
 
 ## Benchmark
 
-Same questions, same repo, Claude Code with and without dowse.
+Same questions, same repo, Claude Code with and without dowse. 8 concept questions ("how is a container's CPU percentage calculated?") about [zoo](https://github.com/chann44/zoo) (197 files, 1,615 chunks), each asked twice per setup. Claude Code (Opus 5.5) could only use Read, Grep and Glob, plus `search_code` in the dowse runs. Numbers are averages per question.
 
-| | Tool calls | Tokens | Time to answer |
-| --- | --- | --- | --- |
-| Claude Code | TODO | TODO | TODO |
-| Claude Code + dowse | TODO | TODO | TODO |
+| | Correct | Tool calls | Input tokens | Time to answer | Cost |
+| --- | --- | --- | --- | --- | --- |
+| Claude Code | 16/16 | 3.44 | 128k | 13.2s | $0.158 |
+| Claude Code + dowse | 16/16 | **2.06** (−40%) | 120k (−6%) | **11.8s** (−11%) | $0.174 (+10%) |
 
-Dowse helps most on concept questions ("where do we rate limit?"). When you already know the identifier, grep is just as good. Full question set and method in [`bench/`](./bench).
+When Claude reached for `search_code` (8 of 16 runs), it needed 1.38 tool calls instead of 3.25 on the same questions. Often one call answered the question with no grep or file reads.
+
+What this does not show yet:
+
+- **Accuracy.** Both setups answered everything correctly. zoo is small enough for grep, and the gains reported elsewhere come mostly from 1,000+ file repos.
+- **Savings in cost.** Fewer calls didn't make runs cheaper, probably because results include a lot of code. Trimming them is next.
+- **Consistent use.** Claude used dowse on half the questions and grepped when the question had an obvious keyword ("AWS", "CPU").
+
+Dowse helps most on concept questions ("where do we rate limit?"). When you already know the identifier, grep is just as good. Questions, runner and raw results are in [`bench/`](./bench).
 
 ## Configuration
 

@@ -1,0 +1,60 @@
+[
+ {
+  "id": 1,
+  "q": "How does a sandbox figure out which parts of the screen changed between two captures?",
+  "expect": [
+   "guest/diff.go",
+   "server/screen.py"
+  ]
+ },
+ {
+  "id": 2,
+  "q": "Where do we throttle repeated login attempts, and what happens when someone goes over the limit?",
+  "expect": [
+   "server/limits.py"
+  ]
+ },
+ {
+  "id": 3,
+  "q": "When the agent is driven from a chat app, how is its progress shown by updating a single message?",
+  "expect": [
+   "integrations/relay.py"
+  ]
+ },
+ {
+  "id": 4,
+  "q": "How is a container's CPU usage percentage calculated?",
+  "expect": [
+   "server/monitor.py"
+  ]
+ },
+ {
+  "id": 5,
+  "q": "Where is the custom fast image encoder used for screenshots, and why is it faster?",
+  "expect": [
+   "guest/fastpng.go"
+  ]
+ },
+ {
+  "id": 6,
+  "q": "How are requests to AWS's key management service authenticated?",
+  "expect": [
+   "server/kms.py"
+  ]
+ },
+ {
+  "id": 7,
+  "q": "On Linux guests, how is outbound network traffic allowed or blocked?",
+  "expect": [
+   "guest/egress_linux.go",
+   "guest/egress.go"
+  ]
+ },
+ {
+  "id": 8,
+  "q": "How does the API reach a service listening on a sandbox's loopback port without that port being published?",
+  "expect": [
+   "guest/tunnel.go"
+  ]
+ }
+]

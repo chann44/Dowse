@@ -21,6 +21,11 @@ Use it for concept questions where you don't know the identifier, e.g. "where is
 
 Prefer grep/glob when you already know an exact name or string.`
 
+// instructions are shown to the agent up front. Claude Code defers MCP tool
+// schemas, so without this the agent only sees the tool name and falls back
+// to grep for everything.
+const instructions = `dowse is a local semantic index of this repository. When you need to find where something happens or how a behaviour is implemented and you don't already know the exact identifier or string, call search_code FIRST with a plain-English description, before Grep/Glob. One search_code call usually returns the right function with its code, replacing several rounds of grep and file reads. Use Grep when you know the exact name or text.`
+
 type SearchInput struct {
 	Query       string `json:"query" jsonschema:"natural-language description of the code you are looking for"`
 	Limit       int    `json:"limit,omitempty" jsonschema:"max results (default 8, max 30)"`
@@ -48,7 +53,7 @@ func New(ix *index.Indexer) *Server {
 }
 
 func (s *Server) Run(ctx context.Context, version string) error {
-	srv := mcp.NewServer(&mcp.Implementation{Name: "dowse", Version: version}, nil)
+	srv := mcp.NewServer(&mcp.Implementation{Name: "dowse", Version: version}, &mcp.ServerOptions{Instructions: instructions})
 	mcp.AddTool(srv, &mcp.Tool{Name: "search_code", Description: toolDescription}, s.searchCode)
 	s.refresh(ctx) // start indexing right away so the first search is fast
 	return srv.Run(ctx, &mcp.StdioTransport{})
